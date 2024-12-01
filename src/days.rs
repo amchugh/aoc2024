@@ -46,7 +46,7 @@ fn get_formatted_time(d: &Duration) -> String {
     } else if d.as_millis() > 0 {
         format!("{}ms", d.as_millis())
     } else {
-        format!("{}μs", d.as_micros())
+        format!("{}us", d.as_micros())
     }
 }
 
@@ -73,7 +73,7 @@ pub fn run_day(sol: &mut Box<dyn Solution>, filepath: &str) {
     // Report the results
     println!("Part 1: {part1}");
     println!("Part 2: {part2}");
-    println!("Duration: {}", get_formatted_time(&total_time));
+    println!("Duration: {} ({}us)", get_formatted_time(&total_time), total_time.as_micros());
     println!("|   Parsing: {}", get_formatted_time(&parse_duration));
     println!("|    Part 1: {}", get_formatted_time(&part1_duration));
     println!("|    Part 2: {}", get_formatted_time(&part2_duration));
