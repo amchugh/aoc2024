@@ -1,19 +1,19 @@
 
-use std::collections::BTreeMap;
+use std::{thread, time::SystemTime};
 
 use crate::days::Solution;
 
 #[derive(Debug)]
 pub struct Day1 {
-    left: BTreeMap<u64, u64>,
-    right: BTreeMap<u64, u64>,
+    left: Vec<u16>,
+    right: Vec<u16>,
 }
 
 impl Day1 {
     pub fn new() -> Day1 {
         Day1 {
-            left: BTreeMap::new(),
-            right: BTreeMap::new(),
+            left: Vec::new(),
+            right: Vec::new(),
         }
     }
 }
@@ -28,42 +28,41 @@ impl Solution for Day1 {
             let right = parts.next().unwrap().trim().parse::<u64>().unwrap();
             (left, right)
         });
+
+        let pairs = pairs.collect::<Vec<_>>();
+        let lmax = *pairs.iter().map(|(x, _)| x).max().unwrap() as usize + 1;
+        let rmax = *pairs.iter().map(|(_, x)| x).max().unwrap() as usize + 1;
+        self.left = vec![0; lmax];
+        self.right = vec![0; rmax];
         for (l, r) in pairs {
-            match self.left.get(&l) {
-                Some(current) => { self.left.insert(l, current + 1); }
-                None => { self.left.insert(l, 1); }
-            };
-            match self.right.get(&r) {
-                Some(current) => { self.right.insert(r, current + 1); }
-                None => { self.right.insert(r, 1); }
-            };
+            self.left[l as usize] += 1;
+            self.right[r as usize] += 1;
         }
     }
 
     fn part1(&self) -> String {
-        let mut left = self.left.clone();
-        let mut right = self.right.clone();
-
+        let mut right_index = 0;
+        let mut count_right = self.right[right_index];
         let mut total_distance = 0;
-        while let Some((value, count)) = left.pop_first() {
+        for index in 0..self.left.len() {
+            if self.left[index] == 0 {
+                continue;
+            }
+            let count = self.left[index];
             // Take the #count least keys out of the right, summing their distance
-            let (mut least_right, mut count_right) = right.pop_first().unwrap();
-            for _ in 0..count {
-                if count_right == 0 {
-                    // Get the next smallest
-                    (least_right, count_right) = right.pop_first().unwrap();
+            for _ in 0..(count as usize) {
+                while count_right == 0 {
+                    right_index += 1;
+                    count_right = self.right[right_index];
                 }
                 count_right = count_right - 1;
                 // Calculate and add the distance of the pair we just made
-                let distance = if value > least_right {
-                    value - least_right
+                let distance = if index > right_index {
+                    index - right_index
                 } else {
-                    least_right - value
+                    right_index - index
                 };
                 total_distance += distance;
-            }
-            if count_right > 0 {
-                right.insert(least_right, count_right);
             }
         }
         total_distance.to_string()
@@ -74,9 +73,12 @@ impl Solution for Day1 {
         // each number in the left list after multiplying it 
         // by the number of times that number appears in the right list.
         let mut similarity_score = 0;
-        for (value, _) in self.left.iter() {
-            let appearances = self.right.get(value).unwrap_or(&0);
-            let score = value * appearances;
+        for index in 0..self.left.len() {
+            if self.left[index] == 0 {
+                continue;
+            }
+            let appearances = *self.right.get(index).unwrap_or(&0);
+            let score = index * appearances as usize;
             similarity_score += score;
         }
         similarity_score.to_string()
