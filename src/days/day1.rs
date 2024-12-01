@@ -41,24 +41,23 @@ impl Solution for Day1 {
     }
 
     fn part1(&self) -> String {
-        let mut left = self.left.clone();
         let mut right = self.right.clone();
+        let (mut least_right, mut count_right) = right.pop_first().unwrap();
 
         let mut total_distance = 0;
-        while let Some((value, count)) = left.pop_first() {
+        for (value, count) in self.left.iter() {
             // Take the #count least keys out of the right, summing their distance
-            let (mut least_right, mut count_right) = right.pop_first().unwrap();
-            for _ in 0..count {
+            for _ in 0..*count {
                 if count_right == 0 {
                     // Get the next smallest
                     (least_right, count_right) = right.pop_first().unwrap();
                 }
                 count_right = count_right - 1;
                 // Calculate and add the distance of the pair we just made
-                let distance = if value > least_right {
-                    value - least_right
+                let distance = if *value > least_right {
+                    *value - least_right
                 } else {
-                    least_right - value
+                    least_right - *value
                 };
                 total_distance += distance;
             }
