@@ -61,9 +61,6 @@ impl Solution for Day1 {
                 };
                 total_distance += distance;
             }
-            if count_right > 0 {
-                right.insert(least_right, count_right);
-            }
         }
         total_distance.to_string()
     }
