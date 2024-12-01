@@ -41,9 +41,9 @@ fn read_file(filepath: &str) -> String {
 }
 
 fn get_formatted_time(d: &Duration) -> String {
-    if d.as_secs() > 0 {
+    if d.as_secs() > 9 {
         format!("{}s", d.as_secs())
-    } else if d.as_millis() > 0 {
+    } else if d.as_millis() > 9 {
         format!("{}ms", d.as_millis())
     } else {
         format!("{}us", d.as_micros())
