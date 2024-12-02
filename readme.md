@@ -3,12 +3,12 @@
 ## Adding a day
 
 Steps to add a day, where `NUMBER` should be replaced with the day number:
-1. duplicate `src/days/blankday.rs` to `src/days/dayNUMBER.rs`.
-2. go into the newly created file and change every occurance of `DayNUMBER` with the correct number.
-3. go into `src/days.rs` and add `mod dayNUMBER.rs` under the comment `// ADD_MOD_HERE`
-4. Add `Box::new(dayNUMBER::DayNUMBER::new()),` under the comment `// ADD_SOLUTION_HERE`
-5. Copy your problem input into `data/dayNUMBER.txt`
-6. Implement the `todos!` and run! 
+1. Duplicate `src/days/blankday.rs` to `src/days/[will|aidan]/dayNUMBER.rs`.
+2. Go into the newly created file and change every occurance of `DayNUMBER` with the correct number.
+3. Go into `src/days/[will|aida]/mod.rs` and add `mod dayNUMBER.rs` under the comment `// ADD_MOD_HERE`.
+4. Go into `src/days.rs` and add `result.insert(NUMBER, Box::new([will|aidan]::dayNUMBER::DayNUMBER::new()));` under the comment `// ADD_SOLUTION_HERE` for the appropriate person.
+5. Copy your problem input into `data/dayNUMBER.txt`.
+6. Implement the `todos!` and run!
 
 ## Timing
 
@@ -28,16 +28,4 @@ Everything else is timed.
 
 ## Running
 
-You can do one of the following
-```
-Today with the puzzle input:    $ cargo run
-Today with custom input:        $ cargo run -- path/to/input.txt
-Day number 4 with puzzle input: $ cargo run -- 4
-Day number 6 with custom input: $ cargo run -- 6 path/to/input.txt
-Running all puzzles:            $ cargo run -- all
-```
-
-Once done, you can run the following to build and run the optimized version:
-```
-cargo run -r -- all
-```
+You can compile with optimizations by adding `-r` to the cargo build options. Typically, run `cargo run` while working and then `cargo run -r -- -a -p > report-aidan.txt` when done.

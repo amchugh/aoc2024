@@ -63,6 +63,8 @@ fn get_formatted_time(d: &Duration) -> String {
 pub fn run_many_times(sol: &mut Box<dyn Solution>, filepath: &str, times: usize) {
     let input = read_file(filepath);
     let mut average: Duration;
+    let mut min_time: Duration;
+    let mut max_time: Duration;
 
     // Run the first time
     let start: SystemTime = SystemTime::now();
@@ -71,6 +73,8 @@ pub fn run_many_times(sol: &mut Box<dyn Solution>, filepath: &str, times: usize)
     let _ = sol.part2();
     let end = SystemTime::now();
     average = end.duration_since(start).unwrap();
+    min_time = average;
+    max_time = average;
 
     // Run many more times
     for _ in 0..times-1 {
@@ -83,12 +87,17 @@ pub fn run_many_times(sol: &mut Box<dyn Solution>, filepath: &str, times: usize)
         let end = SystemTime::now();
         let duration = end.duration_since(start).unwrap();
 
+        min_time = duration.min(min_time);
+        max_time = duration.max(max_time);
+
         average += duration;
     }
 
     average = average / times as u32;
 
     println!("Average duration: {} ({}us)", get_formatted_time(&average), average.as_micros());
+    println!("Minimum duration: {} ({}us)", get_formatted_time(&min_time), min_time.as_micros());
+    println!("Maximum duration: {} ({}us)", get_formatted_time(&max_time), max_time.as_micros());
 }
 
 pub fn run_day(sol: &mut Box<dyn Solution>, filepath: &str) {

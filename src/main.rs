@@ -14,12 +14,16 @@ fn get_default_input_file_for_day(day_number: usize) -> String {
 
 fn run_all_days(by: Person, do_perf: bool, times: usize) {
     let mut all_days = get_solutions(by);
-    for (day_number, sol) in all_days.iter_mut() {
+    let len = all_days.len();
+    for (i, (day_number, sol)) in all_days.iter_mut().enumerate() {
         let filepath = get_default_input_file_for_day(*day_number);
         println!("Executing for day {day_number} with {filepath}:");
         run_day(sol, &filepath);
         if do_perf {
             run_many_times(sol, &filepath, times);
+        }
+        if i < len - 1 {
+            println!();
         }
     }
 }
