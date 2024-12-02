@@ -66,8 +66,8 @@ impl Solution for Day1 {
     }
 
     fn part2(&self) -> String {
-        // Calculate a total similarity score by adding up 
-        // each number in the left list after multiplying it 
+        // Calculate a total similarity score by adding up
+        // each number in the left list after multiplying it
         // by the number of times that number appears in the right list.
         let mut similarity_score = 0;
         for (value, _) in self.left.iter() {

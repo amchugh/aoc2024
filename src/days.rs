@@ -1,4 +1,4 @@
-use std::{fs, time::{Duration, SystemTime}};
+use std::{collections::HashMap, fs, str::FromStr, time::{Duration, SystemTime}};
 use chrono::Datelike;
 
 pub trait Solution {
@@ -7,29 +7,38 @@ pub trait Solution {
     fn part2(&self) -> String;
 }
 
-// -----------------------------------------------
+mod aidan;
+mod will;
 
-// ADD_MOD_HERE
-mod day1;
-
-pub fn get_all_days() -> Vec<Box<dyn Solution>> {
-    // ADD_SOLUTION_HERE
-    vec![ 
-        Box::new(day1::Day1::new()),
-    ]
+#[derive(Clone, Debug, clap::ValueEnum)]
+pub enum Person {
+    Aidan,
+    Will
 }
 
-pub fn get_today(override_day: Option<usize>) -> Option<usize> {
-    if override_day.is_some() {
-        Some(override_day.unwrap() - 1)
-    } else {
-        // Get the current day
-        let now = chrono::Local::now();
-        if now.month() == 12 {
-            Some(now.day() as usize - 1)
-        } else {
-            None
+// -----------------------------------------------
+
+pub fn get_solutions(by: Person) -> HashMap<usize, Box<dyn Solution>> {
+    let mut result: HashMap<usize, Box<dyn Solution>> = HashMap::new();
+    match by {
+        Person::Will => {
+            // ADD_SOLUTION_HERE
         }
+        Person::Aidan => {
+            result.insert(1, Box::new(aidan::day1::Day1::new()));
+        }
+    }
+    // -----------------
+    result
+}
+
+pub fn get_today() -> Option<usize> {
+    // Get the current day
+    let now = chrono::Local::now();
+    if now.month() == 12 {
+        Some(now.day() as usize)
+    } else {
+        None
     }
 }
 

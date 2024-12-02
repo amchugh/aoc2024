@@ -1,64 +1,96 @@
 
-use std::env;
+use std::{env, fs};
+
+use clap::{Parser, ValueEnum};
 
 use crate::days::*;
 mod days;
 
-fn run_all_days() {
-    let mut all_days = get_all_days();
-    for (i, day) in all_days.iter_mut().enumerate() {
-        let day_number = i + 1;
-        let filepath = format!("data/day{day_number}.txt");
-        println!("Executing day {day_number} with {filepath}:");
-        run_day(day, &filepath);
+const LAST_PERSON_FILE_PATH: &str = ".last";
+
+fn get_default_input_file_for_day(day_number: usize) -> String {
+    format!("data/day{day_number}.txt")
+}
+
+fn run_all_days(by: Person) {
+    let mut all_days = get_solutions(by);
+    for (day_number, sol) in all_days.iter_mut() {
+        let filepath = get_default_input_file_for_day(*day_number);
+        println!("Executing for day {day_number} with {filepath}:");
+        run_day(sol, &filepath);
     }
 }
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
+#[derive(clap::Parser, Debug)]
+struct CLI {
+    #[arg(short, long, value_enum)]
+    person: Option<Person>,
+    #[arg(short, long, value_name = "INPUT FILE")]
+    input: Option<std::path::PathBuf>,
+    #[arg(short, long, value_name = "DAY NUMBER")]
+    day: Option<usize>,
+    #[arg(short, long, help = "Run all solutions")]
+    all: bool,
+}
 
-    if args.len() == 2 && args[1] == "--help" {
-        println!("Usage: aoc2024 [number|\"all\"] [filepath]");
-        return;
+fn main() -> std::io::Result<()> {
+    let options = CLI::parse();
+
+    // Store the last person used so you don't need to set it every time :)
+    let person;
+    if options.person.is_some() {
+        person = options.person.unwrap();
+        fs::write(LAST_PERSON_FILE_PATH, format!("{:#?}", person))?;
     }
-    
-    let override_day;
-    if args.len() > 1 {
-        if args[1] == "all" {
-            return run_all_days();
-        } else {
-            let num = args[1].parse::<usize>();
-            match num {
-                Ok(override_day_) => override_day = Some(override_day_),
-                Err(_) => override_day = None
-            };
+    else {
+        let last_person = fs::read_to_string(LAST_PERSON_FILE_PATH);
+        match last_person {
+            Err(_) => {
+                println!("Must set `--person` the first time.");
+                return Ok(());
+            }
+            Ok(last_person) => {
+                let last_person = Person::from_str(&last_person, true);
+                if last_person.is_err() {
+                    println!("Failed to read the last person. Must set `--person`.");
+                    return Ok(());
+                }
+                person = last_person.unwrap();
+            }
         }
-    } else {
-        override_day = None;
     }
 
-    let day_index = get_today(override_day);
-    if day_index.is_none() {
-        println!("Add the day you would like to run as the first command line argument or 'all'");
-        return;
-    }
-    let day_index = day_index.unwrap();
-    let mut all_days = get_all_days();
-    let day = all_days.get_mut(day_index).unwrap_or_else(|| panic!("Failed to get day, make sure you've added it to the vector of solutions"));
-    let day_number = day_index + 1;
-
-    if args.len() == 1 || (args.len() == 2 && override_day.is_some()) {
-        let filepath = format!("data/day{day_number}.txt");
-        println!("Executing day {day_number} with {filepath}:");
-        run_day(day, &filepath);
-    } else if args.len() == 2 && override_day.is_none() {
-        let filepath = &args[1];
-        println!("Executing day {day_number} with {filepath}:");
-        run_day(day, &filepath);
+    // If we're running them all, we can ignore the other inputs
+    if options.all {
+        run_all_days(person);
     } else {
-        assert!(override_day.is_some());
-        let filepath = &args[2];
+        let day_number = match options.day {
+            Some(x) => x,
+            None => match days::get_today() {
+                Some(x) => x,
+                None => {
+                    println!("Failed to get today. Must set `--day`.");
+                    return Ok(());
+                }
+            }
+        };
+
+        let filepath = match options.input {
+            Some(path) => path.to_str().unwrap().to_owned(),
+            None => get_default_input_file_for_day(day_number)
+        };
+
+        let mut all_days = get_solutions(person);
+        let sol = all_days.get_mut(&day_number);
+        if sol.is_none() {
+            println!("Failed to find solution day {}", day_number);
+            return Ok(());
+        }
+        let sol = sol.unwrap();
+
         println!("Executing day {day_number} with {filepath}:");
-        run_day(day, &filepath);
+        run_day(sol, &filepath);
     }
+
+    Ok(())
 }
