@@ -1,7 +1,8 @@
-use std::{collections::HashMap, fs, str::FromStr, time::{Duration, SystemTime}};
+use std::{collections::HashMap, fs, time::{Duration, SystemTime}};
 use chrono::Datelike;
 
 pub trait Solution {
+    fn reset(&mut self);
     fn parse_input(&mut self, file_contents: &str);
     fn part1(&self) -> String;
     fn part2(&self) -> String;
@@ -57,6 +58,37 @@ fn get_formatted_time(d: &Duration) -> String {
     } else {
         format!("{}us", d.as_micros())
     }
+}
+
+pub fn run_many_times(sol: &mut Box<dyn Solution>, filepath: &str, times: usize) {
+    let input = read_file(filepath);
+    let mut average: Duration;
+
+    // Run the first time
+    let start: SystemTime = SystemTime::now();
+    sol.parse_input(&input);
+    let _ = sol.part1();
+    let _ = sol.part2();
+    let end = SystemTime::now();
+    average = end.duration_since(start).unwrap();
+
+    // Run many more times
+    for _ in 0..times-1 {
+        sol.reset();
+
+        let start: SystemTime = SystemTime::now();
+        sol.parse_input(&input);
+        let _ = sol.part1();
+        let _ = sol.part2();
+        let end = SystemTime::now();
+        let duration = end.duration_since(start).unwrap();
+
+        average += duration;
+    }
+
+    average = average / times as u32;
+
+    println!("Average duration: {} ({}us)", get_formatted_time(&average), average.as_micros());
 }
 
 pub fn run_day(sol: &mut Box<dyn Solution>, filepath: &str) {

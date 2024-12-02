@@ -1,5 +1,5 @@
 
-use std::{env, fs};
+use std::fs;
 
 use clap::{Parser, ValueEnum};
 
@@ -12,18 +12,21 @@ fn get_default_input_file_for_day(day_number: usize) -> String {
     format!("data/day{day_number}.txt")
 }
 
-fn run_all_days(by: Person) {
+fn run_all_days(by: Person, do_perf: bool, times: usize) {
     let mut all_days = get_solutions(by);
     for (day_number, sol) in all_days.iter_mut() {
         let filepath = get_default_input_file_for_day(*day_number);
         println!("Executing for day {day_number} with {filepath}:");
         run_day(sol, &filepath);
+        if do_perf {
+            run_many_times(sol, &filepath, times);
+        }
     }
 }
 
 #[derive(clap::Parser, Debug)]
 struct CLI {
-    #[arg(short, long, value_enum)]
+    #[arg(short='n', long, value_enum)]
     person: Option<Person>,
     #[arg(short, long, value_name = "INPUT FILE")]
     input: Option<std::path::PathBuf>,
@@ -31,6 +34,10 @@ struct CLI {
     day: Option<usize>,
     #[arg(short, long, help = "Run all solutions")]
     all: bool,
+    #[arg(short, long, help = "Run many times to get average performance")]
+    performance: bool,
+    #[arg(short, long, default_value = "1000", help = "Number of times to run a solution for performance")]
+    times: usize,
 }
 
 fn main() -> std::io::Result<()> {
@@ -62,7 +69,7 @@ fn main() -> std::io::Result<()> {
 
     // If we're running them all, we can ignore the other inputs
     if options.all {
-        run_all_days(person);
+        run_all_days(person, options.performance, options.times);
     } else {
         let day_number = match options.day {
             Some(x) => x,
@@ -90,6 +97,9 @@ fn main() -> std::io::Result<()> {
 
         println!("Executing day {day_number} with {filepath}:");
         run_day(sol, &filepath);
+        if options.performance {
+            run_many_times(sol, &filepath, options.times);
+        }
     }
 
     Ok(())

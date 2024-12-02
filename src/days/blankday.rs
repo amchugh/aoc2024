@@ -14,6 +14,11 @@ impl DayNUMBER {
 }
 
 impl Solution for DayNUMBER {
+    fn reset(&mut self) {
+        // Should probably do the same thing new() does.
+        todo!()
+    }
+
     fn parse_input(&mut self, file_contents: &str) {
         todo!()
     }
