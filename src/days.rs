@@ -27,6 +27,9 @@ pub fn get_solutions(by: Person) -> HashMap<usize, Box<dyn Solution>> {
         }
         Person::Aidan => {
             result.insert(1, Box::new(aidan::day1::Day1::new()));
+            result.insert(9, Box::new(aidan::day9::Day9::new()));
+            result.insert(11, Box::new(aidan::day11::Day11::new()));
+            result.insert(13, Box::new(aidan::day13::Day13::new()));
             result.insert(14, Box::new(aidan::day14::Day14::new()));
         }
     }

@@ -13,7 +13,12 @@ fn get_default_input_file_for_day(day_number: usize) -> String {
 }
 
 fn run_all_days(by: Person, do_perf: bool, times: usize) {
-    let mut all_days = get_solutions(by);
+    // Sort the solutions by day number
+    let all_days = get_solutions(by);
+    let mut all_days = all_days.into_iter().collect::<Vec<(usize, Box<dyn Solution>)>>();
+    all_days.sort_by(|a, b| a.0.cmp(&b.0));
+
+    // Run all solutions
     let len = all_days.len();
     for (i, (day_number, sol)) in all_days.iter_mut().enumerate() {
         let filepath = get_default_input_file_for_day(*day_number);

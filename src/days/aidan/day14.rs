@@ -73,7 +73,7 @@ impl Day14 {
         }
     }
 
-    fn print_grid(robots: &Vec<Robot>) {
+    fn _print_grid(robots: &Vec<Robot>) {
         let mut grid: Vec<Vec<usize>> = vec![vec![0; WIDTH as usize]; HEIGHT as usize];
         for robot in robots {
             grid[robot.y as usize][robot.x as usize] += 1;
