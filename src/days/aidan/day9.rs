@@ -20,7 +20,8 @@ impl Day9 {
 impl Solution for Day9 {
     fn reset(&mut self) {
         // Should probably do the same thing new() does.
-        todo!()
+        self.block_counts = vec![];
+        self.free_spaces = vec![];
     }
 
     fn parse_input(&mut self, file_contents: &str) {

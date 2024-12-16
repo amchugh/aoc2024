@@ -173,7 +173,7 @@ impl Day13 {
 impl Solution for Day13 {
     fn reset(&mut self) {
         // Should probably do the same thing new() does.
-        todo!()
+        self.machines = vec![];
     }
 
     fn parse_input(&mut self, file_contents: &str) {
