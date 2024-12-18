@@ -24,10 +24,10 @@ impl Solution for DayNUMBER {
     }
 
     fn part1(&self) -> String {
-        todo!()
+        "Not Implemented".to_string()
     }
 
     fn part2(&self) -> String {
-        todo!()
+        "Not Implemented".to_string()
     }
 }
