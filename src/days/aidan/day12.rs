@@ -30,6 +30,7 @@ impl Day12 {
 impl Solution for Day12 {
     fn reset(&mut self) {
         // Should probably do the same thing new() does.
+        self.grid = vec![];
     }
 
     fn parse_input(&mut self, file_contents: &str) {
