@@ -33,6 +33,7 @@ impl Direction {
 
 type Empty = bool;
 
+#[allow(dead_code)]
 #[derive(Clone, Debug)]
 struct Blocker {
     seen: [bool; 4],
@@ -68,11 +69,11 @@ impl Day6 {
         let x: usize = x.into();
         let y: usize = y.into();
 
-        if x < 0 || x >= self.width {
+        if x >= self.width {
             return None;
         }
 
-        if y < 0 || y >= self.map.len() {
+        if y >= self.map.len() {
             return None;
         }
 
@@ -173,7 +174,10 @@ impl Solution for Day6 {
         seen.len().to_string()
     }
 
+    #[allow(unreachable_code)]
     fn part2(&self) -> String {
+        return "Not Implemented".to_string();
+
         // Get all the blockers on the map
         let mut block_map = HashMap::new();
         for y in 0..self.map.len() {
@@ -262,9 +266,7 @@ impl Solution for Day6 {
                     let block = local_block_map.get_mut(&(self.position_to_idx(nextx as usize, nexty as usize).unwrap())).unwrap();
                     let idx = dir.to_idx();
                     if block.seen[idx] {
-                        dbg!(&block);
-                        panic!();
-                        return 1;
+                        panic!("{:?}", block);
                     }
                     block.seen[idx] = true;
                     dir = dir.next();
@@ -272,7 +274,6 @@ impl Solution for Day6 {
             }
         }).sum();
 
-        // total.to_string()
-        "Not Implemented".to_string()
+        total.to_string();
     }
 }

@@ -148,6 +148,7 @@ impl Solution for Day17 {
         building
     }
 
+    #[allow(unreachable_code)]
     fn part2(&self) -> String {
         return "Not Implemented".to_string();
 
