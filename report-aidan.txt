@@ -1,65 +1,153 @@
 Executing for day 1 with data/day1.txt:
 Part 1: 2176849
 Part 2: 23384288
-Duration: 471us (471us)
-|   Parsing: 383us
-|    Part 1: 42us
-|    Part 2: 46us
+Duration: 472us (472us)
+|   Parsing: 385us
+|    Part 1: 43us
+|    Part 2: 44us
 Average duration: 143us (143us)
-Minimum duration: 117us (117us)
-Maximum duration: 421us (421us)
+Minimum duration: 120us (120us)
+Maximum duration: 409us (409us)
 
 Executing for day 3 with data/day3.txt:
 Part 1: 157621318
 Part 2: 79845780
-Duration: 179us (179us)
-|   Parsing: 2us
-|    Part 1: 126us
-|    Part 2: 51us
-Average duration: 109us (109us)
-Minimum duration: 107us (107us)
-Maximum duration: 137us (137us)
+Duration: 181us (181us)
+|   Parsing: 1us
+|    Part 1: 127us
+|    Part 2: 53us
+Average duration: 110us (110us)
+Minimum duration: 108us (108us)
+Maximum duration: 135us (135us)
+
+Executing for day 5 with data/day5.txt:
+Part 1: 5374
+Part 2: 4260
+Duration: 2583us (2583us)
+|   Parsing: 136us
+|    Part 1: 298us
+|    Part 2: 2149us
+Average duration: 2410us (2410us)
+Minimum duration: 2151us (2151us)
+Maximum duration: 3655us (3655us)
+
+Executing for day 6 with data/day6.txt:
+Part 1: 4982
+Part 2: Not Implemented
+Duration: 226us (226us)
+|   Parsing: 57us
+|    Part 1: 169us
+|    Part 2: 0us
+Average duration: 199us (199us)
+Minimum duration: 174us (174us)
+Maximum duration: 276us (276us)
+
+Executing for day 7 with data/day7.txt:
+Part 1: 945512582195
+Part 2: 271691107779347
+Duration: 36ms (36947us)
+|   Parsing: 197us
+|    Part 1: 922us
+|    Part 2: 35ms
+Average duration: 31ms (31175us)
+Minimum duration: 29ms (29086us)
+Maximum duration: 38ms (38104us)
+
+Executing for day 8 with data/day8.txt:
+Part 1: 308
+Part 2: 1147
+Duration: 90us (90us)
+|   Parsing: 18us
+|    Part 1: 14us
+|    Part 2: 58us
+Average duration: 74us (74us)
+Minimum duration: 71us (71us)
+Maximum duration: 101us (101us)
 
 Executing for day 9 with data/day9.txt:
 Part 1: 6241633730082
 Part 2: 6265268809555
-Duration: 9501us (9501us)
+Duration: 9514us (9514us)
 |   Parsing: 42us
-|    Part 1: 32us
-|    Part 2: 9427us
-Average duration: 9721us (9721us)
-Minimum duration: 9429us (9429us)
-Maximum duration: 15ms (15375us)
+|    Part 1: 33us
+|    Part 2: 9439us
+Average duration: 9482us (9482us)
+Minimum duration: 9427us (9427us)
+Maximum duration: 10ms (10916us)
+
+Executing for day 10 with data/day10.txt:
+Part 1: 638
+Part 2: 1289
+Duration: 701us (701us)
+|   Parsing: 17us
+|    Part 1: 350us
+|    Part 2: 334us
+Average duration: 628us (628us)
+Minimum duration: 622us (622us)
+Maximum duration: 672us (672us)
 
 Executing for day 11 with data/day11.txt:
 Part 1: 183620
 Part 2: 220377651399268
-Duration: 11ms (11224us)
-|   Parsing: 2us
-|    Part 1: 315us
-|    Part 2: 10ms
-Average duration: 11ms (11218us)
-Minimum duration: 11ms (11012us)
-Maximum duration: 13ms (13223us)
+Duration: 11ms (11999us)
+|   Parsing: 4us
+|    Part 1: 330us
+|    Part 2: 11ms
+Average duration: 11ms (11968us)
+Minimum duration: 11ms (11804us)
+Maximum duration: 12ms (12645us)
+
+Executing for day 12 with data/day12.txt:
+Part 1: 1485656
+Part 2: Not Implemented
+Duration: 2211us (2211us)
+|   Parsing: 70us
+|    Part 1: 2141us
+|    Part 2: 0us
+Average duration: 2035us (2035us)
+Minimum duration: 1977us (1977us)
+Maximum duration: 2239us (2239us)
 
 Executing for day 13 with data/day13.txt:
 Part 1: 25629
 Part 2: 107487112929999
-Duration: 78us (78us)
-|   Parsing: 71us
-|    Part 1: 4us
+Duration: 94us (94us)
+|   Parsing: 88us
+|    Part 1: 3us
 |    Part 2: 3us
-Average duration: 68us (68us)
-Minimum duration: 68us (68us)
-Maximum duration: 87us (87us)
+Average duration: 86us (86us)
+Minimum duration: 84us (84us)
+Maximum duration: 107us (107us)
 
 Executing for day 14 with data/day14.txt:
 Part 1: 209409792
 Part 2: 8006
-Duration: 5103us (5103us)
-|   Parsing: 68us
-|    Part 1: 285us
-|    Part 2: 4750us
-Average duration: 5185us (5185us)
-Minimum duration: 5035us (5035us)
-Maximum duration: 8130us (8130us)
+Duration: 5119us (5119us)
+|   Parsing: 61us
+|    Part 1: 284us
+|    Part 2: 4774us
+Average duration: 5137us (5137us)
+Minimum duration: 5080us (5080us)
+Maximum duration: 5236us (5236us)
+
+Executing for day 17 with data/day17.txt:
+Part 1: 4,6,1,4,2,1,3,1,6
+Part 2: Not Implemented
+Duration: 11us (11us)
+|   Parsing: 3us
+|    Part 1: 8us
+|    Part 2: 0us
+Average duration: 0us (0us)
+Minimum duration: 0us (0us)
+Maximum duration: 2us (2us)
+
+Executing for day 18 with data/day18.txt:
+Part 1: 284
+Part 2: 51,50
+Duration: 1070us (1070us)
+|   Parsing: 86us
+|    Part 1: 438us
+|    Part 2: 546us
+Average duration: 924us (924us)
+Minimum duration: 891us (891us)
+Maximum duration: 1314us (1314us)
