@@ -115,7 +115,9 @@ impl Day15 {
 impl Solution for Day15 {
     fn reset(&mut self) {
         // Should probably do the same thing new() does.
-        todo!()
+        self.grid = vec![];
+        self.movements = vec![];
+        self.start = (0, 0);
     }
 
     fn parse_input(&mut self, file_contents: &str) {
