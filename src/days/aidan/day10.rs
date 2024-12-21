@@ -14,9 +14,9 @@ impl Day10 {
         Day10 { grid: vec![], zero_locations: vec![] }
     }
 
-    fn char_at(&self, x: usize, y: usize) -> Option<char> {
-        if let Some(row) = self.grid.get(y) {
-            if let Some(c) = row.get(x) {
+    fn char_at(&self, x: i64, y: i64) -> Option<char> {
+        if let Some(row) = self.grid.get(y as usize) {
+            if let Some(c) = row.get(x as usize) {
                 return Some(*c);
             }
         }
@@ -24,20 +24,23 @@ impl Day10 {
     }
 
     fn find_adjacent(&self, x: usize, y: usize, target: usize) -> Vec<(usize, usize)> {
+        let x = x as i64;
+        let y = y as i64;
+
         let target_char: char = ('0' as u8 + target as u8).into();
         let mut result = vec![];
 
         if self.char_at(x+1, y).unwrap_or(0 as char) == target_char {
-            result.push((x+1, y));
+            result.push(((x+1) as usize, y as usize));
         }
         if self.char_at(x-1, y).unwrap_or(0 as char) == target_char {
-            result.push((x-1, y));
+            result.push(((x-1) as usize, y as usize));
         }
         if self.char_at(x, y+1).unwrap_or(0 as char) == target_char {
-            result.push((x, y+1));
+            result.push((x as usize, (y+1) as usize));
         }
         if self.char_at(x, y-1).unwrap_or(0 as char) == target_char {
-            result.push((x, y-1));
+            result.push((x as usize, (y-1) as usize));
         }
 
         result

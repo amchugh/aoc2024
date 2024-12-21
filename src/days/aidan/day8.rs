@@ -56,14 +56,22 @@ impl Solution for Day8 {
                 for other_idx in idx + 1..positions.len() {
                     let b = &positions[other_idx];
                     // Figure out their reflections
-                    let dx = a.0 - b.0;
-                    let dy = a.1 - b.1;
+                    let dx = a.0.wrapping_sub(b.0);
+                    let dy = a.1.wrapping_sub(b.1);
                     // Attempt insert
-                    if a.0 + dx < self.width && a.1 + dy < self.height {
-                        antinodes.insert((a.0 + dx, a.1 + dy));
+                    {
+                        let x = a.0.wrapping_add(dx);
+                        let y = a.1.wrapping_add(dy);
+                        if x < self.width && y < self.height {
+                            antinodes.insert((x, y));
+                        }
                     }
-                    if b.0 - dx < self.width && b.1 - dy < self.height {
-                        antinodes.insert((b.0 - dx, b.1 - dy));
+                    {
+                        let x = b.0.wrapping_sub(dx);
+                        let y = b.1.wrapping_sub(dy);
+                        if x < self.width && y < self.height {
+                            antinodes.insert((x, y));
+                        }
                     }
                 }
             }
@@ -82,24 +90,28 @@ impl Solution for Day8 {
                 for other_idx in idx + 1..positions.len() {
                     let b = &positions[other_idx];
                     // Figure out their reflections
-                    let dx = a.0 - b.0;
-                    let dy = a.1 - b.1;
+                    let dx = a.0.wrapping_sub(b.0);
+                    let dy = a.1.wrapping_sub(b.1);
                     for i in 0..self.width {
                         // Attempt insert
-                        let dx = dx * i;
-                        let dy = dy * i;
-                        if a.0 + dx < self.width && a.1 + dy < self.height {
-                            antinodes.insert((a.0 + dx, a.1 + dy));
+                        let dx = dx.wrapping_mul(i);
+                        let dy = dy.wrapping_mul(i);
+                        let x = a.0.wrapping_add(dx);
+                        let y = a.1.wrapping_add(dy);
+                        if x < self.width && y < self.height {
+                            antinodes.insert((x, y));
                         } else {
                             break
                         }
                     }
                     for i in 0..self.width {
                         // Attempt insert
-                        let dx = dx * i;
-                        let dy = dy * i;
-                        if b.0 - dx < self.width && b.1 - dy < self.height {
-                            antinodes.insert((b.0 - dx, b.1 - dy));
+                        let dx = dx.wrapping_mul(i);
+                        let dy = dy.wrapping_mul(i);
+                        let x = b.0.wrapping_sub(dx);
+                        let y = b.1.wrapping_sub(dy);
+                        if x < self.width && y < self.height {
+                            antinodes.insert((x, y));
                         } else {
                             break
                         }

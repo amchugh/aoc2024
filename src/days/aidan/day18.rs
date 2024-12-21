@@ -53,7 +53,7 @@ impl Day18 {
                 }
             }
             {
-                let x = x - 1;
+                let x = x.wrapping_sub(1);
                 let y = y;
                 if Self::is_valid(grid, x, y) {
                     queue.push_back((x, y, current.2 + 1));
@@ -68,7 +68,7 @@ impl Day18 {
             }
             {
                 let x = x;
-                let y = y - 1;
+                let y = y.wrapping_sub(1);
                 if Self::is_valid(grid, x, y) {
                     queue.push_back((x, y, current.2 + 1));
                 }

@@ -74,7 +74,7 @@ impl Solution for Day12 {
                         }
                     }
                     {
-                        let x = current.0 - 1;
+                        let x = current.0.wrapping_sub(1);
                         let y = current.1;
                         if let Some(adjacent) = Self::get_at(&self.grid, x, y) {
                             if adjacent == token {
@@ -95,7 +95,7 @@ impl Solution for Day12 {
                     }
                     {
                         let x = current.0;
-                        let y = current.1 - 1;
+                        let y = current.1.wrapping_sub(1);
                         if let Some(adjacent) = Self::get_at(&self.grid, x, y) {
                             if adjacent == token {
                                 edges -= 1;
