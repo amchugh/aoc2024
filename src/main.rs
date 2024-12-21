@@ -12,24 +12,31 @@ fn get_default_input_file_for_day(day_number: usize) -> String {
     format!("data/day{day_number}.txt")
 }
 
-fn run_all_days(by: Person, do_perf: bool, times: usize) {
+fn run_all_days(by: Person, do_perf: bool, times: usize, solutions_only: bool) {
     // Sort the solutions by day number
     let all_days = get_solutions(by);
     let mut all_days = all_days.into_iter().collect::<Vec<(usize, Box<dyn Solution>)>>();
     all_days.sort_by(|a, b| a.0.cmp(&b.0));
 
+    let mut total = 0;
+
     // Run all solutions
-    let len = all_days.len();
-    for (i, (day_number, sol)) in all_days.iter_mut().enumerate() {
+    for (day_number, sol) in all_days.iter_mut() {
         let filepath = get_default_input_file_for_day(*day_number);
-        println!("Executing for day {day_number} with {filepath}:");
-        run_day(sol, &filepath);
-        if do_perf {
-            run_many_times(sol, &filepath, times);
-        }
-        if i < len - 1 {
+        if solutions_only {
+            total += print_answers(format!("Day {day_number:2}"), sol, &filepath);
+        } else {
+            println!("Executing for day {day_number} with {filepath}:");
+            run_day(sol, &filepath);
+            if do_perf {
+                run_many_times(sol, &filepath, times);
+            }
             println!();
         }
+    }
+
+    if solutions_only {
+        println!("Completed [{}/{}]", total, all_days.len() * 2);
     }
 }
 
@@ -47,6 +54,8 @@ struct CLI {
     performance: bool,
     #[arg(short, long, default_value = "1000", help = "Number of times to run a solution for performance")]
     times: usize,
+    #[arg(short, long="solutions-only", help = "Just print the answers")]
+    solutions_only: bool,
 }
 
 fn main() -> std::io::Result<()> {
@@ -78,7 +87,7 @@ fn main() -> std::io::Result<()> {
 
     // If we're running them all, we can ignore the other inputs
     if options.all {
-        run_all_days(person, options.performance, options.times);
+        run_all_days(person, options.performance, options.times, options.solutions_only);
     } else {
         let day_number = match options.day {
             Some(x) => x,
@@ -105,9 +114,13 @@ fn main() -> std::io::Result<()> {
         let sol = sol.unwrap();
 
         println!("Executing day {day_number} with {filepath}:");
-        run_day(sol, &filepath);
-        if options.performance {
-            run_many_times(sol, &filepath, options.times);
+        if options.solutions_only {
+            print_answers(format!("Day {day_number} with {filepath}"), sol, &filepath);
+        } else {
+            run_day(sol, &filepath);
+            if options.performance {
+                run_many_times(sol, &filepath, options.times);
+            }
         }
     }
 

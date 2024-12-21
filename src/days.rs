@@ -118,6 +118,22 @@ pub fn run_many_times(sol: &mut Box<dyn Solution>, filepath: &str, times: usize)
     println!("Maximum duration: {} ({}us)", get_formatted_time(&max_time), max_time.as_micros());
 }
 
+pub fn print_answers(leading: String, sol: &mut Box<dyn Solution>, filepath: &str) -> usize {
+    let (part1, part2) = get_answer(sol, filepath);
+    let completed1 = part1 != "Not Implemented";
+    let completed2 = part2 != "Not Implemented";
+    println!("{} [{}] [{}] => {}, {}", leading, if completed1 { '*' } else { ' ' }, if completed2 { '*' } else { ' ' }, part1, part2);
+    (completed1 as u8 + completed2 as u8) as usize
+}
+
+fn get_answer(sol: &mut Box<dyn Solution>, filepath: &str) -> (String, String) {
+    let input = read_file(filepath);
+    sol.parse_input(&input);
+    let part1 = sol.part1();
+    let part2 = sol.part2();
+    (part1, part2)
+}
+
 pub fn run_day(sol: &mut Box<dyn Solution>, filepath: &str) {
     let input = read_file(filepath);
     // Time every part of this
