@@ -61,7 +61,7 @@ impl Solution for Day7 {
                     next_possible.push(p * i);
                     next_possible.push(p + i);
                     // Concatenation
-                    let digits = i.checked_ilog10().unwrap_or(0) + 1;
+                    let digits = i.ilog10() + 1;
                     next_possible.push(p * (10_i64.pow(digits)) + i);
                 }
                 possible = next_possible;
