@@ -1,4 +1,6 @@
 
+use priority_queue::PriorityQueue;
+
 use crate::days::Solution;
 
 #[derive(Debug)]
@@ -26,9 +28,7 @@ impl Solution for Day21 {
 
     fn part1(&self) -> String {
         self.paths.iter().map(|path| -> usize {
-            let mut unvisited = PriorityQueue::new();
-
-
+            // let mut unvisited = PriorityQueue::new();
             1
         }).sum::<usize>().to_string()
     }
