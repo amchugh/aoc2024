@@ -5,11 +5,9 @@ use std::collections::{HashMap, HashSet};
 
 use crate::days::Solution;
 
-#[derive(PartialOrd, Ord)]
-// struct NetworkThree(String, String, String);
+#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 struct NetworkThree {
     repr: String,
-    starts_with_t: bool,
 }
 
 impl NetworkThree {
@@ -17,53 +15,24 @@ impl NetworkThree {
         let mut triple = [a, b, c];
         triple.sort();
         let repr = triple[0].to_owned() + triple[1] + triple[2];
-        let starts_with_t = a.starts_with("t") || b.starts_with("t") || c.starts_with("t");
-        NetworkThree { repr, starts_with_t }
+        NetworkThree { repr }
     }
 
+    #[allow(dead_code)]
     fn first(&self) -> &str {
         self.repr.split_at(2).0
     }
 
+    #[allow(dead_code)]
     fn second(&self) -> &str {
         self.repr.split_at(2).1.split_at(2).0
     }
 
+    #[allow(dead_code)]
     fn third(&self) -> &str {
         self.repr.split_at(4).1
     }
 }
-
-impl Debug for NetworkThree {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // f.write_fmt(format_args!("({} {} {})", self.0, self.1, self.2))
-        f.write_fmt(format_args!("{}", self.repr))
-    }
-}
-
-impl Hash for NetworkThree {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        // let total: u64 = self.0.chars().map(|x| x as u64).sum::<u64>() +
-        // self.1.chars().map(|x| x as u64).sum::<u64>() +
-        // self.2.chars().map(|x| x as u64).sum::<u64>();
-        // total.hash(state)
-        self.repr.hash(state)
-    }
-}
-
-impl PartialEq for NetworkThree {
-    fn eq(&self, other: &Self) -> bool {
-        self.repr == other.repr
-        // (self.0 == other.0 && self.1 == other.1 && self.2 == other.2) ||
-        // (self.0 == other.0 && self.2 == other.1 && self.1 == other.2) ||
-        // (self.1 == other.0 && self.2 == other.1 && self.0 == other.2) ||
-        // (self.1 == other.0 && self.0 == other.1 && self.2 == other.2) ||
-        // (self.2 == other.0 && self.0 == other.1 && self.1 == other.2) ||
-        // (self.2 == other.0 && self.1 == other.1 && self.0 == other.2)
-    }
-}
-
-impl Eq for NetworkThree {}
 
 #[derive(Debug)]
 pub struct Day23 {
@@ -152,45 +121,45 @@ impl Solution for Day23 {
         let mut threes: HashSet<NetworkThree> = HashSet::new();
 
         // Take every 2-pair and count the number that they have in common, removing from the list
+        let mut starts_with_t = false;
         let mut itr1 = self.outgoing.iter();
         while let Some(left) = itr1.next() {
+            starts_with_t = left.0.chars().next().unwrap() == 'c';
             let mut itr2 = itr1.clone();
             while let Some(right) = itr2.next() {
+                starts_with_t = starts_with_t || right.0.chars().next().unwrap() == 'c';
                 // Only count if these two are connected
                 if left.1.contains(right.0) {
                     assert!(right.1.contains(left.0));
                     // Get all of the third-s
                     let shared = left.1.intersection(right.1);
                     for third in shared {
-                        threes.insert(NetworkThree::from(left.0, right.0, third));
+                        // We only want connections that contain a 't'
+                        if starts_with_t || third.chars().next().unwrap() == 'c' {
+                            threes.insert(NetworkThree::from(left.0, right.0, third));
+                        }
                     }
                 }
             }
         }
 
-        // We only want connections that contain a 't'
-        let filtered = threes.iter().filter(|x| {
-            x.starts_with_t
-        });
-
         // Debug only
-        let mut list: Vec<&NetworkThree> = filtered.clone().collect();
-        list.sort();
-        list.dedup();
-        // Check them!
-        for el in list {
-            let map = self.outgoing.get(el.first()).unwrap();
-            assert!(map.contains(el.second()));
-            assert!(map.contains(el.third()));
-            let map = self.outgoing.get(el.second()).unwrap();
-            assert!(map.contains(el.first()));
-            assert!(map.contains(el.third()));
-            let map = self.outgoing.get(el.third()).unwrap();
-            assert!(map.contains(el.first()));
-            assert!(map.contains(el.second()));
+        #[cfg(debug_assertions)]
+        {
+            for el in threes.iter() {
+                let map = self.outgoing.get(el.first()).unwrap();
+                assert!(map.contains(el.second()));
+                assert!(map.contains(el.third()));
+                let map = self.outgoing.get(el.second()).unwrap();
+                assert!(map.contains(el.first()));
+                assert!(map.contains(el.third()));
+                let map = self.outgoing.get(el.third()).unwrap();
+                assert!(map.contains(el.first()));
+                assert!(map.contains(el.second()));
+            }
         }
 
-        filtered.count().to_string()
+        threes.iter().count().to_string()
     }
 
     fn part2(&self) -> String {
