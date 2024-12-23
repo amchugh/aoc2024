@@ -1,5 +1,4 @@
 
-use std::cmp::max;
 use std::fmt::Debug;
 use std::hash::{Hash, Hasher};
 use std::collections::{HashMap, HashSet};
