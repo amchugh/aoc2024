@@ -47,6 +47,7 @@ pub fn get_solutions(by: Person) -> HashMap<usize, Box<dyn Solution>> {
             result.insert(21, Box::new(aidan::day21::Day21::new()));
             result.insert(22, Box::new(aidan::day22::Day22::new()));
             result.insert(23, Box::new(aidan::day23::Day23::new()));
+            result.insert(24, Box::new(aidan::day24::Day24::new()));
         }
     }
     // -----------------
