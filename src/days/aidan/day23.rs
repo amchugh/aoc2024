@@ -1,6 +1,6 @@
 
 use std::fmt::Debug;
-use std::hash::{Hash, Hasher};
+use std::hash::Hash;
 use std::collections::{HashMap, HashSet};
 
 use crate::days::Solution;
@@ -121,7 +121,7 @@ impl Solution for Day23 {
         let mut threes: HashSet<NetworkThree> = HashSet::new();
 
         // Take every 2-pair and count the number that they have in common, removing from the list
-        let mut starts_with_t = false;
+        let mut starts_with_t;
         let mut itr1 = self.outgoing.iter();
         while let Some(left) = itr1.next() {
             starts_with_t = left.0.chars().next().unwrap() == 'c';
