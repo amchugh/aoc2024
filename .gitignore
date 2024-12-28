@@ -1,4 +1,6 @@
+.DS_Store
 /target
 /data/*.txt
 sample.txt
 .last
+/optimized
