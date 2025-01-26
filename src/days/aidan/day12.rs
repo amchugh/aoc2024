@@ -1,5 +1,4 @@
-
-use std::collections::HashSet;
+use std::{collections::{BTreeMap, HashSet}, ops::{Not, Range}};
 
 use crate::days::Solution;
 
@@ -17,13 +16,108 @@ impl Day12 {
         }
     }
 
-    fn get_at(grid: &Vec<Vec<char>>, x: usize, y: usize) -> Option<char> {
-        let width = grid[0].len();
-        if x >= width || y >= grid.len() {
-            None
-        } else {
-            Some(grid[y][x])
+    fn get_at(&self, x: usize, y: usize) -> Option<char> {
+        self.grid.get(y).and_then(|row| row.get(x)).copied()
+    }
+
+    fn process_block(&self, x: usize, y: usize, seen: &mut HashSet<(usize, usize)>) -> (usize, usize) {
+        let token = match self.get_at(x, y) {
+            Some(t) => t,
+            None => return (0, 0),
+        };
+   
+        let mut stack = vec![(x, y)];
+        let mut size = 0;
+        let mut perimeter = 0;
+   
+        while let Some(current) = stack.pop() {
+            if !seen.insert(current) {
+                continue;
+            }
+            size += 1;
+   
+            let mut edges = 4;
+            for (nx, ny) in [
+                (current.0 + 1, current.1),
+                (current.0.wrapping_sub(1), current.1),
+                (current.0, current.1 + 1),
+                (current.0, current.1.wrapping_sub(1)),
+            ] {
+                if let Some(adjacent) = self.get_at(nx, ny) {
+                    if adjacent == token {
+                        edges -= 1;
+                        stack.push((nx, ny));
+                    }
+                }
+            }
+            perimeter += edges;
         }
+   
+        (size, perimeter)
+    }
+
+    fn process_block_edges(&self, x: usize, y: usize, seen: &mut HashSet<(usize, usize)>) -> (usize, usize) {
+        let token = match self.get_at(x, y) {
+            Some(t) => t,
+            None => return (0, 0),
+        };
+
+        let mut stack = vec![(x, y)];
+        let mut size = 0;
+        let mut horizontal = BTreeMap::new();
+        let mut vertical = BTreeMap::new();
+
+        while let Some((cx, cy)) = stack.pop() {
+            if !seen.insert((cx, cy)) {
+                continue;
+            }
+            size += 1;
+
+            // Check all four directions and collect boundary edges
+            for (dx, dy) in &[(1, 0), (0, 1), (usize::MAX, 0), (0, usize::MAX)] {
+                let nx = cx.wrapping_add(*dx);
+                let ny = cy.wrapping_add(*dy);
+               
+                if self.get_at(nx, ny) != Some(token) {
+                    if *dx == 1 || *dx == usize::MAX {
+                        // Vertical edge (left/right)
+                        let edge_x = if *dx == 1 { cx + 1 } else { cx };
+                        vertical.entry(edge_x)
+                            .or_insert(Vec::new())
+                            .push(cy..(cy + 1));
+                    } else {
+                        // Horizontal edge (top/bottom)
+                        let edge_y = if *dy == 1 { cy + 1 } else { cy };
+                        horizontal.entry(edge_y)
+                            .or_insert(Vec::new())
+                            .push(cx..(cx + 1));
+                    }
+                } else if !seen.contains(&(nx, ny)) {
+                    stack.push((nx, ny));
+                }
+            }
+        }
+
+        // Function to merge ranges and count segments
+        let merge = |ranges: &Vec<Range<usize>>| -> usize {
+            let mut merged: Vec<Range<usize>> = Vec::new();
+            let mut sorted_ranges: Vec<Range<usize>> = ranges.iter().cloned().collect();
+            sorted_ranges.sort_by_key(|r| r.start);
+            for range in sorted_ranges {
+                if let Some(last) = merged.last_mut() {
+                    if last.end >= range.start {
+                        last.end = last.end.max(range.end);
+                        continue;
+                    }
+                }
+                merged.push(range);
+            }
+            merged.len()
+        };
+
+        let h_count = horizontal.values().map(&merge).sum::<usize>();
+        let v_count = vertical.values().map(&merge).sum::<usize>();
+        (size, h_count + v_count)
     }
 }
 
@@ -40,81 +134,32 @@ impl Solution for Day12 {
     }
 
     fn part1(&self) -> String {
-        let width = self.grid[0].len();
-
-        let mut seen: HashSet<(usize, usize)> = HashSet::new();
-        let mut total = 0;
-
-        for y in 0..self.grid.len() {
-            for x in 0..width {
-                if seen.contains(&(x,y)) {
-                    continue
-                }
-                // We are at a new block. Process it.
-                let mut stack = vec![(x, y)];
-                let mut size = 0;
-                let mut perimeter = 0;
-                let token = Self::get_at(&self.grid, x, y).unwrap();
-                while let Some(current) = stack.pop() {
-                    if seen.contains(&current) {
-                        continue
-                    }
-                    // Increment size
-                    size += 1;
-                    // Count the perimeter and add the nexts
-                    let mut edges = 4;
-                    {
-                        let x = current.0 + 1;
-                        let y = current.1;
-                        if let Some(adjacent) = Self::get_at(&self.grid, x, y) {
-                            if adjacent == token {
-                                edges -= 1;
-                                stack.push((x, y))
-                            }
-                        }
-                    }
-                    {
-                        let x = current.0.wrapping_sub(1);
-                        let y = current.1;
-                        if let Some(adjacent) = Self::get_at(&self.grid, x, y) {
-                            if adjacent == token {
-                                edges -= 1;
-                                stack.push((x, y))
-                            }
-                        }
-                    }
-                    {
-                        let x = current.0;
-                        let y = current.1 + 1;
-                        if let Some(adjacent) = Self::get_at(&self.grid, x, y) {
-                            if adjacent == token {
-                                edges -= 1;
-                                stack.push((x, y))
-                            }
-                        }
-                    }
-                    {
-                        let x = current.0;
-                        let y = current.1.wrapping_sub(1);
-                        if let Some(adjacent) = Self::get_at(&self.grid, x, y) {
-                            if adjacent == token {
-                                edges -= 1;
-                                stack.push((x, y))
-                            }
-                        }
-                    }
-                    perimeter += edges;
-                    // We've now seen this one
-                    seen.insert(current);
-                }
-                total += size * perimeter
-            }
-        }
-
-        total.to_string()
+        let mut seen = HashSet::new();
+       
+        self.grid.iter().enumerate()
+            .flat_map(|(y, row)| (0..row.len()).map(move |x| (x, y)))
+            .filter_map(|(x, y)| {
+                seen.contains(&(x, y)).not().then(|| {
+                    let (size, perimeter) = self.process_block(x, y, &mut seen);
+                    size * perimeter
+                })
+            })
+            .sum::<usize>()
+            .to_string()
     }
 
     fn part2(&self) -> String {
-        "Not Implemented".to_string()
+        let mut seen = HashSet::new();
+       
+        self.grid.iter().enumerate()
+            .flat_map(|(y, row)| (0..row.len()).map(move |x| (x, y)))
+            .filter_map(|(x, y)| {
+                seen.contains(&(x, y)).not().then(|| {
+                    let (size, perimeter) = self.process_block_edges(x, y, &mut seen);
+                    size * perimeter
+                })
+            })
+            .sum::<usize>()
+            .to_string()
     }
 }
